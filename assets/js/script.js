@@ -15,7 +15,7 @@ var score = 0;
 var index = 0;
 
 // The first entry in each answer list is correct
-var questions = [
+var questions = shuffleArray([
     {
         "questionText": "Commonly used data types do NOT include:",
         "choice1": "Alerts",
@@ -27,10 +27,45 @@ var questions = [
         "questionText": "The condition in an if/else statement is enclused within:",
         "choice1": "Parentheses",
         "choice2": "Quotes",
-        "choice3": "Curly Braces",
+        "choice3": "Curly braces",
         "choice4": "Square brackets"
+    },
+    {
+        "questionText": "Arrays in JavaScript can be used to store which data types?",
+        "choice1": "All data types",
+        "choice2": "Other arrays",
+        "choice3": "Booleans",
+        "choice4": "Numbers and strings"
+    },
+    {
+        "questionText": "String values must be enclosed within:",
+        "choice1": "Quotes",
+        "choice2": "Commas",
+        "choice3": "Curly braces",
+        "choice4": "Parentheses"
+    },
+    {
+        "questionText": "How do you print content to the console in Javascript?",
+        "choice1": "console.log",
+        "choice2": "console.print",
+        "choice3": "console.write",
+        "choice4": "console.toString"
+    },
+    {
+        "questionText": "A way to select an element with Javascript is:",
+        "choice1": "document.querySelector",
+        "choice2": "document.selectElement",
+        "choice3": "element.get",
+        "choice4": "element.select"
+    },
+    {
+        "questionText": "How do you save an item to local storage with Javascript?",
+        "choice1": "localStorage.setItem",
+        "choice2": "localStorage.saveItem",
+        "choice3": "document.getLocalStorage.setItem",
+        "choice4": "document.getLocalStorage.saveItem"
     }
-];
+]);
 
 startButton.addEventListener("click", function() {
     detailsSection.setAttribute("style", "display:none");
@@ -54,7 +89,7 @@ function quiz() {
 function generateQuestion() {
     currentQuestion = questions[index];
     question.textContent = currentQuestion.questionText;
-    var answers = [currentQuestion.choice1, currentQuestion.choice2, currentQuestion.choice3, currentQuestion.choice4].sort((a,b) => 0.5 - Math.random());
+    var answers = shuffleArray([currentQuestion.choice1, currentQuestion.choice2, currentQuestion.choice3, currentQuestion.choice4])//.sort((a,b) => 0.5 - Math.random());
 
     choice1.innerHTML = makeButton(answers[0], answers[0] === currentQuestion.choice1);
     choice2.innerHTML = makeButton(answers[1], answers[1] === currentQuestion.choice1);
@@ -83,6 +118,10 @@ quizSection.addEventListener("click", function(event) {
     if (index < questions.length) {
         index++;
         generateQuestion();
+    } else {
+        localStorage.getItem("highscores");
+
+        displayHighScores();
     }
     quizSection.appendChild(result);
 });
@@ -93,4 +132,18 @@ function makeButton(displayText, isCorrect) {
     } else {
         return '<button class="incorrect">' + displayText + '</button>';
     }
+}
+
+function displayHighScores() {
+
+}
+
+function shuffleArray(array) {
+    for (var i = 0; i < array.length; ++i) {
+        var randIndex = Math.floor(Math.random() * array.length)
+        var temp = array[i];
+        array[i] = array[randIndex];
+        array[randIndex] = temp;
+    }
+    return array;
 }
