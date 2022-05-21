@@ -2,19 +2,53 @@ var startButton = document.querySelector("#startQuiz");
 var detailsSection = document.querySelector("#details");
 var quizSection = document.querySelector("#quiz");
 var timerSection = document.querySelector("#timer");
-var question = document.createElement("h1");
+// var formSection = document.querySelector("#form");
+
+var quizHeader = document.createElement("h1");
+
 var choices = document.createElement("ol");
 var choice1 = document.createElement("li");
 var choice2 = document.createElement("li");
 var choice3 = document.createElement("li");
 var choice4 = document.createElement("li");
+
 var result = document.createElement("p");
 result.setAttribute("class", "result");
-var time = 60;
+
+// var initialsSection = document.createElement("p");
+// initialsSection.textContent = "Enter initials";
+
+// var initialsField = document.createElement("form");
+// initialsField.setAttribute("class", "initials");
+
+// var initialsInput = document.createElement("input");
+// initialsInput.setAttribute("id", "initials");
+
+// var initialsButton = document.createElement("button");
+// initialsButton.setAttribute("id", "submit");
+// initialsButton.textContent = "Submit";
+
+// initialsField.appendChild(initialsInput);
+// initialsField.appendChild(initialsButton);
+
+// initialsSection.appendChild(initialsField);
+
+var initialsSection = document.createElement("section");
+initialsSection.innerHTML = `
+    <form>
+        Enter initials: 
+        <input id="initials" />
+        <button id="submit">Submit</button>
+    </form>
+`;
+
+
+var time = 0;
 var score = 0;
 var index = 0;
+var isTakingQuiz = false;
 
-// The first entry in each answer list is correct
+// choice1 is correct in each question
 var questions = shuffleArray([
     {
         "questionText": "Commonly used data types do NOT include:",
@@ -69,13 +103,14 @@ var questions = shuffleArray([
 
 startButton.addEventListener("click", function() {
     detailsSection.setAttribute("style", "display:none");
-    time = 60;
+    time = 75;
     score = 0;
     index = 0;
+    isTakingQuiz = true;
     quiz();
     timerSection.textContent = "Time: " + time;
     var timeInterval = setInterval(function () {
-        if (time > 0) {
+        if (isTakingQuiz && time > 0) {
             time--;
             timerSection.textContent = "Time: " + time;
         }
@@ -88,8 +123,8 @@ function quiz() {
 
 function generateQuestion() {
     currentQuestion = questions[index];
-    question.textContent = currentQuestion.questionText;
-    var answers = shuffleArray([currentQuestion.choice1, currentQuestion.choice2, currentQuestion.choice3, currentQuestion.choice4])//.sort((a,b) => 0.5 - Math.random());
+    quizHeader.textContent = currentQuestion.questionText;
+    var answers = shuffleArray([currentQuestion.choice1, currentQuestion.choice2, currentQuestion.choice3, currentQuestion.choice4])
 
     choice1.innerHTML = makeButton(answers[0], answers[0] === currentQuestion.choice1);
     choice2.innerHTML = makeButton(answers[1], answers[1] === currentQuestion.choice1);
@@ -99,7 +134,8 @@ function generateQuestion() {
     choices.appendChild(choice2);
     choices.appendChild(choice3);
     choices.appendChild(choice4);
-    quizSection.appendChild(question);
+    choices.setAttribute("style", "display:block");
+    quizSection.appendChild(quizHeader);
     quizSection.appendChild(choices);
 }
 
@@ -112,13 +148,17 @@ quizSection.addEventListener("click", function(event) {
         result.innerHTML = "<hr>Incorrect.";
         --score;
         time -= 10;
+    } else {
+        return;
     }
 
     // Generate new question
-    if (index < questions.length) {
+    if (index < questions.length - 1) {
         index++;
         generateQuestion();
     } else {
+        isTakingQuiz = false;
+        var initials = promptInitials();
         localStorage.getItem("highscores");
 
         displayHighScores();
@@ -132,6 +172,16 @@ function makeButton(displayText, isCorrect) {
     } else {
         return '<button class="incorrect">' + displayText + '</button>';
     }
+}
+
+function promptInitials() {
+
+    quizSection.insertBefore(initialsSection, result);
+    // formSection.setAttribute("style", "display:block");
+    //quizHeader.textContent = "All done!";
+    //choices.textContent = "Your final score is " + score;
+    choices.setAttribute("style", "display:none");
+    quizHeader.textContent = "Your final score is " + score;
 }
 
 function displayHighScores() {
