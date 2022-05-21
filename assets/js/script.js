@@ -1,38 +1,33 @@
-var startButton = document.querySelector("#startQuiz");
-var detailsSection = document.querySelector("#details");
+// var detailsSection = document.querySelector("#details");
 var quizSection = document.querySelector("#quiz");
 var timerSection = document.querySelector("#timer");
-// var formSection = document.querySelector("#form");
+var highscoresLink = document.querySelector("#highscores");
 
+// Main sections
 var quizHeader = document.createElement("h1");
+var main = document.createElement("section");
+var result = document.createElement("p");
 
+result.setAttribute("class", "result");
+
+// Main: Home
+var descriptionSection = document.createElement("section");
+descriptionSection.setAttribute("style", "text-align:center");
+descriptionSection.innerHTML = `
+    <p>
+        Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!
+    </p>
+    <button id="startQuiz">Start!</button>
+`;
+
+// Main: Quiz
 var choices = document.createElement("ol");
 var choice1 = document.createElement("li");
 var choice2 = document.createElement("li");
 var choice3 = document.createElement("li");
 var choice4 = document.createElement("li");
 
-var result = document.createElement("p");
-result.setAttribute("class", "result");
-
-// var initialsSection = document.createElement("p");
-// initialsSection.textContent = "Enter initials";
-
-// var initialsField = document.createElement("form");
-// initialsField.setAttribute("class", "initials");
-
-// var initialsInput = document.createElement("input");
-// initialsInput.setAttribute("id", "initials");
-
-// var initialsButton = document.createElement("button");
-// initialsButton.setAttribute("id", "submit");
-// initialsButton.textContent = "Submit";
-
-// initialsField.appendChild(initialsInput);
-// initialsField.appendChild(initialsButton);
-
-// initialsSection.appendChild(initialsField);
-
+// Main: Results
 var initialsSection = document.createElement("section");
 initialsSection.innerHTML = `
     <form>
@@ -42,12 +37,19 @@ initialsSection.innerHTML = `
     </form>
 `;
 
+// Main: High scores
 var scoresSection = document.createElement("section");
 
 var time = 0;
 var score = 0;
 var index = 0;
 var isTakingQuiz = false;
+
+// Set home page up
+quizHeader.textContent = "Coding Quiz Challenge";
+quizSection.appendChild(quizHeader);
+quizSection.appendChild(descriptionSection);
+var startButton = document.querySelector("#startQuiz");
 
 // choice1 is correct in each question
 var questions = shuffleArray([
@@ -103,11 +105,6 @@ var questions = shuffleArray([
 ]);
 
 startButton.addEventListener("click", function() {
-    detailsSection.setAttribute("style", "display:none");
-    time = 75;
-    score = 0;
-    index = 0;
-    isTakingQuiz = true;
     quiz();
     timerSection.textContent = "Time: " + time;
     var timeInterval = setInterval(function () {
@@ -119,6 +116,13 @@ startButton.addEventListener("click", function() {
 });
 
 function quiz() {
+    time = 75;
+    score = 0;
+    index = 0;
+    isTakingQuiz = true;
+    quizSection.removeChild(descriptionSection);
+    quizSection.appendChild(choices);
+    quizSection.appendChild(result);
     generateQuestion();
 }
 
@@ -136,9 +140,14 @@ function generateQuestion() {
     choices.appendChild(choice3);
     choices.appendChild(choice4);
     choices.setAttribute("style", "display:block");
-    quizSection.appendChild(quizHeader);
-    quizSection.appendChild(choices);
+    // quizSection.appendChild(quizHeader);
+    // quizSection.appendChild(choices);
 }
+
+highscoresLink.addEventListener("click", function(event) {
+    quizSection.removeChild(descriptionSection);
+    displayHighScores();
+});
 
 quizSection.addEventListener("click", function(event) {
     var element = event.target;
@@ -164,7 +173,7 @@ quizSection.addEventListener("click", function(event) {
         // localStorage.getItem("highscores");
         // displayHighScores();
     }
-    quizSection.appendChild(result);
+    // quizSection.appendChild(result);
 });
 
 function makeButton(displayText, isCorrect) {
@@ -176,9 +185,10 @@ function makeButton(displayText, isCorrect) {
 }
 
 function promptInitials() {
-    quizSection.insertBefore(initialsSection, result);
-    choices.setAttribute("style", "display:none");
+    // choices.setAttribute("style", "display:none");
     quizHeader.textContent = "Your final score is " + score;
+    quizSection.removeChild(choices);
+    quizSection.insertBefore(initialsSection, result);
     var submitButton = document.querySelector("#submit");
     submitButton.addEventListener("click", saveScore);
 }
