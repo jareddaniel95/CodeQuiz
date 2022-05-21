@@ -42,6 +42,7 @@ initialsSection.innerHTML = `
     </form>
 `;
 
+var scoresSection = document.createElement("section");
 
 var time = 0;
 var score = 0;
@@ -158,10 +159,10 @@ quizSection.addEventListener("click", function(event) {
         generateQuestion();
     } else {
         isTakingQuiz = false;
-        var initials = promptInitials();
-        localStorage.getItem("highscores");
+        promptInitials();
 
-        displayHighScores();
+        // localStorage.getItem("highscores");
+        // displayHighScores();
     }
     quizSection.appendChild(result);
 });
@@ -175,17 +176,52 @@ function makeButton(displayText, isCorrect) {
 }
 
 function promptInitials() {
-
     quizSection.insertBefore(initialsSection, result);
-    // formSection.setAttribute("style", "display:block");
-    //quizHeader.textContent = "All done!";
-    //choices.textContent = "Your final score is " + score;
     choices.setAttribute("style", "display:none");
     quizHeader.textContent = "Your final score is " + score;
+    var submitButton = document.querySelector("#submit");
+    submitButton.addEventListener("click", saveScore);
+}
+
+function saveScore(event) {
+    event.preventDefault();
+
+    var initials = document.querySelector("#initials").value;
+    var highscores = localStorage.getItem("highscores");
+    if (highscores == null) {
+        highscores = {initials: [], scores: []}
+    } else {
+        highscores = JSON.parse(highscores);
+    }
+    console.log("Retrieving: " + highscores)
+    console.log(highscores.scores.length)
+
+    for (i = highscores.scores.length; i >= 0 ; --i) {
+        if (i === 0 || score <= highscores.scores[i-1]) {
+            highscores.scores.splice(i, 0, score);
+            highscores.initials.splice(i, 0, initials);
+            break;
+        }
+    }
+    localStorage.setItem("highscores", JSON.stringify(highscores));
+    console.log("Saving: " + highscores);
+    quizSection.removeChild(initialsSection);
+    quizSection.removeChild(result);
+    displayHighScores();
 }
 
 function displayHighScores() {
-
+    var list = "<ol>\n";
+    var highscores = JSON.parse(localStorage.getItem("highscores"));
+    for (i = 0; i < highscores.scores.length; ++i) {
+        list += "<li>" + highscores.initials[i] + ": " + highscores.scores[i] + "</li>\n";
+        if (i >= 9) {
+            break;
+        }
+    }
+    scoresSection.innerHTML += list;
+    quizHeader.textContent = "High scores"
+    quizSection.appendChild(scoresSection);
 }
 
 function shuffleArray(array) {
