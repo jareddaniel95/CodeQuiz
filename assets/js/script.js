@@ -52,56 +52,55 @@ quizSection.appendChild(quizHeader);
 quizSection.appendChild(descriptionSection);
 var startButton = document.querySelector("#startQuiz");
 
-// choice1 is correct in each question
 var questions = shuffleArray([
     {
-        "questionText": "Commonly used data types do NOT include:",
-        "choice1": "Alerts",
-        "choice2": "Booleans",
-        "choice3": "Strings",
-        "choice4": "Numbers"
+        questionText: "Commonly used data types do NOT include:",
+        choice1: "Alerts",
+        choice2: "Booleans",
+        choice3: "Strings",
+        choice4: "Numbers"
     },
     {
-        "questionText": "The condition in an if/else statement is enclused within:",
-        "choice1": "Parentheses",
-        "choice2": "Quotes",
-        "choice3": "Curly braces",
-        "choice4": "Square brackets"
+        questionText: "The condition in an if/else statement is enclused within:",
+        choice1: "Parentheses",
+        choice2: "Quotes",
+        choice3: "Curly braces",
+        choice4: "Square brackets"
     },
     {
-        "questionText": "Arrays in JavaScript can be used to store which data types?",
-        "choice1": "All data types",
-        "choice2": "Other arrays",
-        "choice3": "Booleans",
-        "choice4": "Numbers and strings"
+        questionText: "Arrays in JavaScript can be used to store which data types?",
+        choice1: "All data types",
+        choice2: "Other arrays",
+        choice3: "Booleans",
+        choice4: "Numbers and strings"
     },
     {
-        "questionText": "String values must be enclosed within:",
-        "choice1": "Quotes",
-        "choice2": "Commas",
-        "choice3": "Curly braces",
-        "choice4": "Parentheses"
+        questionText: "String values must be enclosed within:",
+        choice1: "Quotes",
+        choice2: "Commas",
+        choice3: "Curly braces",
+        choice4: "Parentheses"
     },
     {
-        "questionText": "How do you print content to the console in Javascript?",
-        "choice1": "console.log",
-        "choice2": "console.print",
-        "choice3": "console.write",
-        "choice4": "console.toString"
+        questionText: "How do you print content to the console in Javascript?",
+        choice1: "console.log",
+        choice2: "console.print",
+        choice3: "console.write",
+        choice4: "console.toString"
     },
     {
-        "questionText": "A way to select an element with Javascript is:",
-        "choice1": "document.querySelector",
-        "choice2": "document.selectElement",
-        "choice3": "element.get",
-        "choice4": "element.select"
+        questionText: "A way to select an element with Javascript is:",
+        choice1: "document.querySelector",
+        choice2: "document.selectElement",
+        choice3: "element.get",
+        choice4: "element.select"
     },
     {
-        "questionText": "How do you save an item to local storage with Javascript?",
-        "choice1": "localStorage.setItem",
-        "choice2": "localStorage.saveItem",
-        "choice3": "document.getLocalStorage.setItem",
-        "choice4": "document.getLocalStorage.saveItem"
+        questionText: "How do you save an item to local storage with Javascript?",
+        choice1: "localStorage.setItem",
+        choice2: "localStorage.saveItem",
+        choice3: "document.getLocalStorage.setItem",
+        choice4: "document.getLocalStorage.saveItem"
     }
 ]);
 
