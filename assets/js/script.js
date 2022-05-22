@@ -39,6 +39,7 @@ initialsSection.innerHTML = `
 
 // Main: High scores
 var scoresSection = document.createElement("section");
+scoresSection.setAttribute("class", "scoreList");
 
 var time = 0;
 var score = 0;
@@ -115,6 +116,9 @@ startButton.addEventListener("click", function() {
             isTakingQuiz = false;
             promptInitials();
         }
+        if (!isTakingQuiz) {
+            clearInterval(timeInterval);
+        }
     }, 1000);
 });
 
@@ -123,7 +127,6 @@ function quiz() {
     score = 10;
     index = 0;
     isTakingQuiz = true;
-    // highscoresLink.setAttribute("style", "display:none");
     highscoresLink.innerHTML = "";
     quizSection.removeChild(descriptionSection);
     quizSection.appendChild(choices);
@@ -189,6 +192,9 @@ function saveScore(event) {
     event.preventDefault();
 
     var initials = document.querySelector("#initials").value.toUpperCase();
+    if (initials === "") {
+        initials = "X";
+    }
     var highscores = localStorage.getItem("highscores");
     if (highscores == null) {
         highscores = {initials: [], scores: []}
@@ -207,14 +213,12 @@ function saveScore(event) {
 
     quizSection.removeChild(initialsSection);
     quizSection.removeChild(result);
-    // highscoresLink.removeAttribute("style");
     displayHighScores();
 }
 
 function displayHighScores() {
     scoresSection.innerHTML = "";
     highscoresLink.innerHTML = "";
-    //var list = "<ol>\n";
     var list = document.createElement("ol");
     var highscores = JSON.parse(localStorage.getItem("highscores"));
     if (highscores != null) {
@@ -226,10 +230,8 @@ function displayHighScores() {
                 break;
             }
         }
-        //scoresSection.innerHTML += list;
         scoresSection.appendChild(list);
     }
-    //scoresSection.innerHTML += '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
     var buttonSection = document.createElement("section");
     buttonSection.innerHTML = '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
     scoresSection.appendChild(buttonSection);
@@ -253,7 +255,6 @@ function goBack(event) {
 
 function clearHighScores(event) {
     localStorage.clear();
-    //scoresSection.innerHTML = '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
     if (scoresSection.childNodes.length >= 2) {
         scoresSection.removeChild(scoresSection.firstChild);
     }

@@ -68,3 +68,27 @@ form > button {
     text-decoration: none;
     font-weight: bold;
 }
+
+.scoreList {
+    width: 300px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 0px auto;
+}
+
+.scoreList ol {
+    background-color: #EEDDFB;
+    padding: 15px 30px;
+    margin: 15px;
+}
+
+.scoreList ol li {
+    background-color: #F8EEFF;
+    margin: 2px;
+    border-radius: 10px;
+}
+
+.scoreList button {
+    margin-bottom: 5px;
+    padding: 10px 15px;
+}
