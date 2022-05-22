@@ -32,7 +32,7 @@ var initialsSection = document.createElement("section");
 initialsSection.innerHTML = `
     <form>
         Enter initials: 
-        <input id="initials" />
+        <input id="initials" maxlength="3"/>
         <button id="submit">Submit</button>
     </form>
 `;
@@ -120,7 +120,7 @@ startButton.addEventListener("click", function() {
 
 function quiz() {
     time = 75;
-    score = 0;
+    score = 10;
     index = 0;
     isTakingQuiz = true;
     // highscoresLink.setAttribute("style", "display:none");
@@ -157,7 +157,7 @@ quizSection.addEventListener("click", function(event) {
     if (isTakingQuiz) {
         if (element.textContent === currentQuestion.choice1) {
             result.innerHTML = "<hr>Correct!";
-            ++score;
+            score += 2;
         } else if (element.getAttribute("class") === "answerChoice") {
             result.innerHTML = "<hr>Incorrect.";
             --score;
@@ -188,7 +188,7 @@ function promptInitials() {
 function saveScore(event) {
     event.preventDefault();
 
-    var initials = document.querySelector("#initials").value;
+    var initials = document.querySelector("#initials").value.toUpperCase();
     var highscores = localStorage.getItem("highscores");
     if (highscores == null) {
         highscores = {initials: [], scores: []}
@@ -214,18 +214,25 @@ function saveScore(event) {
 function displayHighScores() {
     scoresSection.innerHTML = "";
     highscoresLink.innerHTML = "";
-    var list = "<ol>\n";
+    //var list = "<ol>\n";
+    var list = document.createElement("ol");
     var highscores = JSON.parse(localStorage.getItem("highscores"));
     if (highscores != null) {
         for (i = 0; i < highscores.scores.length; ++i) {
-            list += "<li>" + highscores.initials[i] + ": " + highscores.scores[i] + "</li>\n";
+            var listItem = document.createElement("li");
+            listItem.textContent = highscores.initials[i] + " - " + highscores.scores[i];
+            list.appendChild(listItem);
             if (i >= 9) {
                 break;
             }
         }
-        scoresSection.innerHTML += list;
+        //scoresSection.innerHTML += list;
+        scoresSection.appendChild(list);
     }
-    scoresSection.innerHTML += '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
+    //scoresSection.innerHTML += '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
+    var buttonSection = document.createElement("section");
+    buttonSection.innerHTML = '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
+    scoresSection.appendChild(buttonSection);
     quizHeader.textContent = "High scores";
     quizSection.appendChild(scoresSection);
 
@@ -237,6 +244,7 @@ function displayHighScores() {
 }
 
 function goBack(event) {
+    console.log("going back...");
     quizSection.removeChild(scoresSection);
     quizHeader.textContent = "Coding Quiz Challenge";
     quizSection.appendChild(descriptionSection);
@@ -245,7 +253,10 @@ function goBack(event) {
 
 function clearHighScores(event) {
     localStorage.clear();
-    scoresSection.innerHTML = '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
+    //scoresSection.innerHTML = '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
+    if (scoresSection.childNodes.length >= 2) {
+        scoresSection.removeChild(scoresSection.firstChild);
+    }
 }
 
 function shuffleArray(array) {
