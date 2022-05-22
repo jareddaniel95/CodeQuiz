@@ -240,7 +240,7 @@ function goBack(event) {
     quizSection.removeChild(scoresSection);
     quizHeader.textContent = "Coding Quiz Challenge";
     quizSection.appendChild(descriptionSection);
-    highscoresLink.innerHTML = '<a href="">High scores</a>';
+    highscoresLink.innerHTML = '<a href="#">High scores</a>';
 }
 
 function clearHighScores(event) {
