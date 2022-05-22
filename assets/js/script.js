@@ -127,6 +127,7 @@ function quiz() {
     index = 0;
     isTakingQuiz = true;
     highscoresLink.innerHTML = "";
+    result.innerHTML = "";
     quizSection.removeChild(descriptionSection);
     quizSection.appendChild(choices);
     quizSection.appendChild(result);
