@@ -111,6 +111,9 @@ startButton.addEventListener("click", function() {
         if (isTakingQuiz && time > 0) {
             time--;
             timerSection.textContent = "Time: " + time;
+        } else if (isTakingQuiz && time <= 0) {
+            isTakingQuiz = false;
+            promptInitials();
         }
     }, 1000);
 });
@@ -140,8 +143,6 @@ function generateQuestion() {
     choices.appendChild(choice3);
     choices.appendChild(choice4);
     choices.setAttribute("style", "display:block");
-    // quizSection.appendChild(quizHeader);
-    // quizSection.appendChild(choices);
 }
 
 highscoresLink.addEventListener("click", function(event) {
@@ -185,7 +186,7 @@ function makeButton(displayText, isCorrect) {
 }
 
 function promptInitials() {
-    // choices.setAttribute("style", "display:none");
+    console.log("Prompting initials...");
     quizHeader.textContent = "Your final score is " + score;
     quizSection.removeChild(choices);
     quizSection.insertBefore(initialsSection, result);
@@ -221,17 +222,39 @@ function saveScore(event) {
 }
 
 function displayHighScores() {
+    scoresSection.innerHTML = "";
     var list = "<ol>\n";
     var highscores = JSON.parse(localStorage.getItem("highscores"));
-    for (i = 0; i < highscores.scores.length; ++i) {
-        list += "<li>" + highscores.initials[i] + ": " + highscores.scores[i] + "</li>\n";
-        if (i >= 9) {
-            break;
+    if (highscores != null) {
+        for (i = 0; i < highscores.scores.length; ++i) {
+            list += "<li>" + highscores.initials[i] + ": " + highscores.scores[i] + "</li>\n";
+            if (i >= 9) {
+                break;
+            }
         }
+        scoresSection.innerHTML += list;
     }
-    scoresSection.innerHTML += list;
-    quizHeader.textContent = "High scores"
+    scoresSection.innerHTML += '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
+    quizHeader.textContent = "High scores";
     quizSection.appendChild(scoresSection);
+
+    var backButton = document.querySelector("#back");
+    backButton.addEventListener("click", goBack);
+
+    var clearButton = document.querySelector("#clear");
+    clearButton.addEventListener("click", clearHighScores);
+}
+
+function goBack(event) {
+    quizSection.removeChild(scoresSection);
+    quizHeader.textContent = "Coding Quiz Challenge";
+    quizSection.appendChild(descriptionSection);
+}
+
+function clearHighScores(event) {
+    localStorage.clear();
+    scoresSection.innerHTML = '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
+    console.log("Cleared scores");
 }
 
 function shuffleArray(array) {
