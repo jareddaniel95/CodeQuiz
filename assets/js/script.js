@@ -123,6 +123,8 @@ function quiz() {
     score = 0;
     index = 0;
     isTakingQuiz = true;
+    // highscoresLink.setAttribute("style", "display:none");
+    highscoresLink.innerHTML = "";
     quizSection.removeChild(descriptionSection);
     quizSection.appendChild(choices);
     quizSection.appendChild(result);
@@ -134,10 +136,10 @@ function generateQuestion() {
     quizHeader.textContent = currentQuestion.questionText;
     var answers = shuffleArray([currentQuestion.choice1, currentQuestion.choice2, currentQuestion.choice3, currentQuestion.choice4])
 
-    choice1.innerHTML = makeButton(answers[0], answers[0] === currentQuestion.choice1);
-    choice2.innerHTML = makeButton(answers[1], answers[1] === currentQuestion.choice1);
-    choice3.innerHTML = makeButton(answers[2], answers[2] === currentQuestion.choice1);
-    choice4.innerHTML = makeButton(answers[3], answers[3] === currentQuestion.choice1);
+    choice1.innerHTML = '<button class="answerChoice">' + answers[0] + '</button>';
+    choice2.innerHTML = '<button class="answerChoice">' + answers[1] + '</button>';
+    choice3.innerHTML = '<button class="answerChoice">' + answers[2] + '</button>';
+    choice4.innerHTML = '<button class="answerChoice">' + answers[3] + '</button>';
     choices.appendChild(choice1);
     choices.appendChild(choice2);
     choices.appendChild(choice3);
@@ -152,41 +154,30 @@ highscoresLink.addEventListener("click", function(event) {
 
 quizSection.addEventListener("click", function(event) {
     var element = event.target;
-    if (element.getAttribute("class") === "correct") {
-        result.innerHTML = "<hr>Correct!";
-        ++score;
-    } else if (element.getAttribute("class") === "incorrect") {
-        result.innerHTML = "<hr>Incorrect.";
-        --score;
-        time -= 10;
-    } else {
-        return;
-    }
+    if (isTakingQuiz) {
+        if (element.textContent === currentQuestion.choice1) {
+            result.innerHTML = "<hr>Correct!";
+            ++score;
+        } else if (element.getAttribute("class") === "answerChoice") {
+            result.innerHTML = "<hr>Incorrect.";
+            --score;
+            time -= 10;
+        } else {
+            return;
+        }
 
-    // Generate new question
-    if (index < questions.length - 1) {
-        index++;
-        generateQuestion();
-    } else {
-        isTakingQuiz = false;
-        promptInitials();
-
-        // localStorage.getItem("highscores");
-        // displayHighScores();
+        // Generate new question
+        if (index < questions.length - 1) {
+            index++;
+            generateQuestion();
+        } else {
+            isTakingQuiz = false;
+            promptInitials();
+        }
     }
-    // quizSection.appendChild(result);
 });
 
-function makeButton(displayText, isCorrect) {
-    if (isCorrect) {
-        return '<button class="correct">' + displayText + '</button>';
-    } else {
-        return '<button class="incorrect">' + displayText + '</button>';
-    }
-}
-
 function promptInitials() {
-    console.log("Prompting initials...");
     quizHeader.textContent = "Your final score is " + score;
     quizSection.removeChild(choices);
     quizSection.insertBefore(initialsSection, result);
@@ -204,8 +195,6 @@ function saveScore(event) {
     } else {
         highscores = JSON.parse(highscores);
     }
-    console.log("Retrieving: " + highscores)
-    console.log(highscores.scores.length)
 
     for (i = highscores.scores.length; i >= 0 ; --i) {
         if (i === 0 || score <= highscores.scores[i-1]) {
@@ -215,14 +204,16 @@ function saveScore(event) {
         }
     }
     localStorage.setItem("highscores", JSON.stringify(highscores));
-    console.log("Saving: " + highscores);
+
     quizSection.removeChild(initialsSection);
     quizSection.removeChild(result);
+    // highscoresLink.removeAttribute("style");
     displayHighScores();
 }
 
 function displayHighScores() {
     scoresSection.innerHTML = "";
+    highscoresLink.innerHTML = "";
     var list = "<ol>\n";
     var highscores = JSON.parse(localStorage.getItem("highscores"));
     if (highscores != null) {
@@ -249,12 +240,12 @@ function goBack(event) {
     quizSection.removeChild(scoresSection);
     quizHeader.textContent = "Coding Quiz Challenge";
     quizSection.appendChild(descriptionSection);
+    highscoresLink.innerHTML = '<a href="">High scores</a>';
 }
 
 function clearHighScores(event) {
     localStorage.clear();
     scoresSection.innerHTML = '<button id="back">Go Back</button> <button id="clear">Clear High Scores</button>';
-    console.log("Cleared scores");
 }
 
 function shuffleArray(array) {

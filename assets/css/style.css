@@ -62,3 +62,9 @@ form > button {
     font-style: italic;
     color: gray;
 }
+
+#highscores a {
+    color: indigo;
+    text-decoration: none;
+    font-weight: bold;
+}
